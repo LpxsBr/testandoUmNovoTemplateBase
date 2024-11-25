@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { router } from "expo-router";
+import { router, useRouter } from "expo-router";
 import { navigate } from "expo-router/build/global-state/routing";
 import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useEffect, useState } from "react";
 
@@ -27,6 +27,8 @@ const AuthProvider = ({children}: IContext) => {
 
     const [isLogged, setLogged] = useState<Boolean>(false);
 
+    const router = useRouter()
+
     const isLoggedF = async () => {
         const token: ITokenProps = JSON.parse(String(await AsyncStorage.getItem('key-auth')));
         
@@ -35,10 +37,12 @@ const AuthProvider = ({children}: IContext) => {
 
         if(token.value == 'tokendeacessso') {
             console.log('logado')
+            router.navigate('/(tabs)/explore')
             return setLogged(true)
         }
 
         console.log('nao logado')
+        router.navigate('/screens/Login')
         return setLogged(false)
         
     }
@@ -54,7 +58,7 @@ const AuthProvider = ({children}: IContext) => {
         if(username == 'janselmo' && password == 'senha'){
             console.log({username, password});
             
-            router.push('/screens/Logged')
+            router.replace('/(tabs)')
             
             return await AsyncStorage.setItem('key-auth', JSON.stringify({value: 'tokendeacessso'}))
         }
@@ -63,7 +67,7 @@ const AuthProvider = ({children}: IContext) => {
     
     const signOut = async () => {
         await AsyncStorage.setItem('key-auth', JSON.stringify({value: 'none'}))
-        return router.push('/(tabs)/explore')
+        router.navigate('/screens/Login')
     }
 
     useEffect(() => {
