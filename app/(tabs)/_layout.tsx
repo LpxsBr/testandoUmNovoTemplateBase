@@ -1,50 +1,95 @@
-import { router, Tabs } from 'expo-router';
-import React, { useEffect, useState } from 'react';
-import { Button, Platform, TextInput, View } from 'react-native';
+import { router, Tabs } from "expo-router";
+import React, { useEffect, useState } from "react";
+import { Button, Platform, Text, TextInput, View } from "react-native";
 
-import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import TabBarBackground from '@/components/ui/TabBarBackground';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
-import { useAuth } from '../context/AuthContext';
+import { HapticTab } from "@/components/HapticTab";
+import { IconSymbol } from "@/components/ui/IconSymbol";
+import TabBarBackground from "@/components/ui/TabBarBackground";
+import { Colors } from "@/constants/Colors";
+import { useColorScheme } from "@/hooks/useColorScheme";
+import { useAuth } from "../context/AuthContext";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
-  const {isLogged, signIn, signOut } = useAuth()
+  const { isLogged, signIn, signOut } = useAuth();
 
-  const [user, setUser] = useState('');
-  const [password, setPassword] = useState('');
+  const [user, setUser] = useState("");
+  const [password, setPassword] = useState("");
 
   useEffect(() => {
-    console.log('1');
+    console.log("1");
 
-    if(isLogged){
-      console.log('2');
-      router.push('/screens/Logged')
+    if (isLogged) {
+      console.log("2");
+      router.push("/screens/Logged");
     }
-  }, [isLogged])
+  }, [isLogged]);
 
   return (
     <>
-    <View style={{
-      display: 'flex',
-      padding: 10,
-      gap: 20
-    }}>
+      <View
+        style={{
+          display: "flex",
+          padding: 10,
+          gap: 20,
+        }}
+      >
+        <View
+          style={{
+            display: "flex",
+            width: "100%",
+            flexDirection: "column",
+            alignItems: "flex-start",
+            justifyContent: "center",
+          }}
+        >
+          <Text style={{ color: "#fff" }}>Usuário</Text>
+          <TextInput
+            style={{
+              backgroundColor: "white",
+              borderRadius: 4,
+              width: "100%",
+              height: 40,
+            }}
+            value={user}
+            onChangeText={(event) => setUser(event)}
+          />
+        </View>
 
-    <TextInput style={{backgroundColor: 'white'}} value={user} onChangeText={(event)=>setUser(event)} />
-    <TextInput style={{backgroundColor: 'white'}} value={password} onChangeText={(event)=>setPassword(event)} />
-    <Button title='logar' onPress={() => {
-      signIn({
-        username: user,
-        password
-      })
-    }} />
-    <Button title='deslogar' onPress={() => {
+        <View
+          style={{
+            display: "flex",
+            width: "100%",
+            flexDirection: "column",
+            alignItems: "flex-start",
+            justifyContent: "center",
+          }}
+        >
+          <Text style={{ color: "#fff" }}>Senha</Text>
+          <TextInput
+            style={{
+              backgroundColor: "white",
+              borderRadius: 4,
+              width: "100%",
+              height: 40,
+            }}
+            value={password}
+            onChangeText={(event) => setPassword(event)}
+          />
+        </View>
+        <Button
+          title="logar"
+          onPress={() => {
+            signIn({
+              username: user,
+              password,
+            });
+          }}
+        />
+        {/* <Button title='deslogar' onPress={() => {
       signOut()
-    }} />
-    </View>
+    }} /> */}
+      </View>
     </>
     // <Tabs
     //   screenOptions={{
