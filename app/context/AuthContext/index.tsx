@@ -1,8 +1,10 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { createContext, Dispatch, ReactNode, useContext, useEffect } from "react";
+import { router } from "expo-router";
+import { navigate } from "expo-router/build/global-state/routing";
+import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useEffect, useState } from "react";
 
 interface IContextProps{
-    isLogged: Function,
+    isLogged: Boolean,
     signIn: Function
     signOut: Function
 }
@@ -16,14 +18,16 @@ interface ITokenProps{
 }
 
 const AuthContext = createContext<IContextProps>({
-    isLogged: () => {},
+    isLogged: false,
     signIn: () => {},
     signOut: () => {}
 })
 
 const AuthProvider = ({children}: IContext) => {
 
-    const isLogged = async (): Promise<Boolean> => {
+    const [isLogged, setLogged] = useState<Boolean>(false);
+
+    const isLoggedF = async () => {
         const token: ITokenProps = JSON.parse(String(await AsyncStorage.getItem('key-auth')));
         
         console.log({token});
@@ -31,11 +35,11 @@ const AuthProvider = ({children}: IContext) => {
 
         if(token.value == 'tokendeacessso') {
             console.log('logado')
-            return true
+            return setLogged(true)
         }
 
         console.log('nao logado')
-        return false
+        return setLogged(false)
         
     }
 
@@ -50,17 +54,20 @@ const AuthProvider = ({children}: IContext) => {
         if(username == 'janselmo' && password == 'senha'){
             console.log({username, password});
             
+            router.push('/screens/Logged')
+            
             return await AsyncStorage.setItem('key-auth', JSON.stringify({value: 'tokendeacessso'}))
         }
         return await AsyncStorage.setItem('key-auth', JSON.stringify({value: 'none'}))
     }
-
+    
     const signOut = async () => {
         await AsyncStorage.setItem('key-auth', JSON.stringify({value: 'none'}))
+        return router.push('/(tabs)/explore')
     }
 
     useEffect(() => {
-        isLogged()
+        isLoggedF()
     }, [])
 
 

@@ -34,11 +34,6 @@ export default function RootLayout() {
     }
   }, [loaded]);
 
-  useEffect(() => {
-    async () => {
-      setAuth(await isLogged())
-    }
-  }, [])
 
   if (!loaded) {
     return null;
@@ -49,13 +44,13 @@ export default function RootLayout() {
       <AuthProvider>
         
         {
-          !isLogged() &&
+          !isLogged &&
           <Stack>
             
           </Stack>
         }
         {
-          isLogged() &&
+          isLogged &&
           <Stack>
             <Text>LOGADO</Text>
             <Button title="Deslogar" onPress={() => signOut()} />
